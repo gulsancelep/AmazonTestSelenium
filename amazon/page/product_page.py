@@ -2,12 +2,12 @@ from selenium.webdriver.common.by import By
 from amazon.base.page_base import BaseClass
 
 
-class ProductPage():
-    """ürün sayfasıda gerekli işlemleri yerine getirir"""
+class ProductPage:
+    """Performs the necessary operations on the product page"""
 
-    ADD_TO_LIST_BTN = (By.CSS_SELECTOR, ".a-button-input.a-declarative")  # 0
-    WISH_LIST = (By.CSS_SELECTOR, ".w-button")  # 0
-    TEXT = (By.CSS_SELECTOR, ".a-size-large.product-title-word-break")  # 0
+    ADD_TO_LIST_BTN = (By.CSS_SELECTOR, ".a-button-input.a-declarative")
+    WISH_LIST = (By.ID, "huc-view-your-list-button")
+    TEXT = (By.CSS_SELECTOR, ".a-size-large.product-title-word-break")
 
     def __init__(self, driver):
         self.driver = driver
@@ -27,3 +27,13 @@ class ProductPage():
         """Used to GET requested textsR"""
 
         return self.methods.get_text(self.TEXT, 0)
+
+    def is_selected_product(self, product_name, cart_product_name):
+        """Assert selected product"""
+
+        assert product_name == cart_product_name, "SELECTED PRODUCT WAS ADDED INCORRECTLY"
+
+    def is_deleted_product(self, delete_text):
+        """Assert deleted product"""
+
+        assert delete_text == "Undo", "PRODUCT DELETE IS INCORRECT"

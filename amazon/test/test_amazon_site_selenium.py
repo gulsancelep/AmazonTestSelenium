@@ -1,8 +1,8 @@
 import unittest
-from amazon.test.amazon_site_selenium_test import Setup
+from amazon.test.amazon_base_test import AmazonBaseTest
 
 
-class AmazonSiteSeleniumTest(unittest.TestCase, Setup):
+class TestAmazonSiteSelenium(AmazonBaseTest):
     """TEST CASE
         1.  http://www.amazon.com sitesine gidecek ve anasayfanın açıldığını assertion ile onaylayacak,
         2. Login ekranını açıp, bir kullanıcı ile login olunacak ( daha önce siteye üyeliği varsa o olabilir )
@@ -16,33 +16,27 @@ class AmazonSiteSeleniumTest(unittest.TestCase, Setup):
         10. Sayfada bu urunun artik favorilere alinmadigini onaylayacak.
     """
 
-    def setup(self):
-        Setup.__init__(self)
-
-    def testAmazon(self):
+    def test_amazon_site_selenium(self):
         self.navigate_to_home_page()
-        assert self.url == self.driver.current_url, "URL ERROR"
+        self.amazon_main.is_home_page(self.url)
         self.amazon_main.click_login_page()
+
         self.amazon_login.login()
         self.amazon_main.navigate_to_search()
-        search_text_control = self.amazon_category.get_text_samsung()
-        assert "Samsung" in search_text_control, "MATCHING ERROR WITH SAMSUNG TEXT"
+
         self.amazon_category.navigate_to_next_page()
         page_number = self.amazon_category.get_page_number()
-        assert page_number == "2", "PAGE NUMBER IS WRONG"
+        self.amazon_category.is_second_page(page_number)
         self.amazon_category.click_product()
+
         product_name = self.amazon_product.get_product_name()
         self.amazon_product.add_to_list()
         self.amazon_product.click_wish_list()
         cart_product_name = self.amazon_cart.get_cart_product_name()
-        assert product_name == cart_product_name, "SELECTED PRODUCT WAS ADDED INCORRECTLY"
+        self.amazon_product.is_selected_product(product_name, cart_product_name)
         self.amazon_cart.delete_item_from_cart()
         delete_text = self.amazon_cart.get_delete_text()
-        assert delete_text == "Undo", "PRODUCT DELETE IS INCORRECT"
+        self.amazon_product.is_deleted_product(delete_text)
 
     def tear_down(self):
         self.driver.quit()
-
-
-if __name__ == '__main__':
-    AmazonSiteSeleniumTest()
